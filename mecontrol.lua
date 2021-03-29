@@ -4,7 +4,8 @@ local me_interface = component.me_interface
 
 local control_loop = true
 
-local indexes = {0, 0}
+local indexes
+
 function control_me()
     local progression_count = 0
 
@@ -40,10 +41,17 @@ function setupRequest(itemName, amount)
     local cpus = me_interface.getCpus()
     if #cpus >= 1 then -- Availability of cpus confirmed
         local craftables = me_interface.getCraftables()
-        print(serialization.serialize(craftables))
+        for k,v in ipairs(craftables) do
+            local craftableData = v.getItemStack()
+            if craftableData.label == itemName then
+                local userdata = v.request(amount)
+                while not userdata.isDone() do
+                    os.sleep(5)
+                end
+            end
+        end
     end
 end
-
 
 function me_stats()
     local avgPower = me_interface.getAvgPowerUsage()
