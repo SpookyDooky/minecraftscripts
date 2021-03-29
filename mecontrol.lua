@@ -36,7 +36,7 @@ function keep_items_level()
 end
 
 function setupRequest(itemName, amount)
-    print("crafting request, item=", v.label, " size=", amount)
+    print("crafting request, item=", itemName, " size=", amount)
     local cpus = me_interface.getCpus()
     if #cpus >= 1 then -- Availability of cpus confirmed
         local craftables = me_interface.getCraftables()
