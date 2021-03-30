@@ -57,8 +57,8 @@ function setupRequest(itemName, amount)
 end
 
 function activeRequest(itemName)
-    local index = 1
-    for crafter1 in craftingTrackers do
+    for index=1,#craftingTrackers do
+        local crafter1 = craftingTrackers[index]
         if crafter1.name == itemName then
             if crafter1.crafter.isDone() then
                 table.remove(craftingTrackers, index)
@@ -66,24 +66,20 @@ function activeRequest(itemName)
             end
             return false
         end
-        index = index + 1
+
     end
 end
 
 function addTable(userData, requestSize, itemName)
     tableData = {
-        name = nil
-        requestSize = nil
+        name = nil,
+        requestSize = nil,
         crafter = nil
     }
     tableData.name = itemName
     tableData.requestSize = requestSize
     tableData.crafter = userData
     table.insert(craftingTrackers, tableData)
-end
-
-function existsInTable(itemName)
-    for k,v in ipairs()
 end
 
 function interrupt()
