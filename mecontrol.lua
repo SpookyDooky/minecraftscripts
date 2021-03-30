@@ -4,7 +4,7 @@ local me_interface = component.me_interface
 
 local control_loop = true
 
-local indexes
+local craftingTrackers = {}
 
 function control_me()
     local progression_count = 0
@@ -27,7 +27,7 @@ function keep_items_level()
     local index = 0
 
     for k,v in ipairs(item_db) do
-        for i=1,2 do
+        for i=1,#itemsToCheck do
             if v.label == itemsToCheck[i] then
                 print(v.label, " quantity:", v.size)
                 if v.size < lowerBound[i] then
@@ -39,6 +39,9 @@ function keep_items_level()
 end
 
 function setupRequest(itemName, amount)
+    if activeRequest(itemName) then
+        return
+    end
     print("crafting request, item=", itemName, " size=", amount)
     local cpus = me_interface.getCpus()
     if #cpus >= 1 then -- Availability of cpus confirmed
@@ -47,22 +50,40 @@ function setupRequest(itemName, amount)
             local craftableData = v.getItemStack()
             if craftableData.label == itemName then
                 local userdata = v.request(amount)
-                while not userdata.isDone() do
-                    os.sleep(5)
-                end
+                addTable(userData, amount, itemName)
             end
         end
     end
 end
 
-function me_stats()
-    local avgPower = me_interface.getAvgPowerUsage()
-    local avgPowerInject = me_interface.getAvgPowerInjection()
-    local powerBuffer = me_interface.getStoredPower()
-    print("Average power usage:  ", avgPower)
-    print("Average power inject: ", avgPowerInject)
-    print("Current power buffer: ", powerBuffer)
-    print("----------------------------------------------------")
+function activeRequest(itemName)
+    local index = 1
+    for crafter1 in craftingTrackers do
+        if crafter1.name == itemName then
+            if crafter1.crafter.isDone() then
+                table.remove(craftingTrackers, index)
+                return true
+            end
+            return false
+        end
+        index = index + 1
+    end
+end
+
+function addTable(userData, requestSize, itemName)
+    tableData = {
+        name = nil
+        requestSize = nil
+        crafter = nil
+    }
+    tableData.name = itemName
+    tableData.requestSize = requestSize
+    tableData.crafter = userData
+    table.insert(craftingTrackers, tableData)
+end
+
+function existsInTable(itemName)
+    for k,v in ipairs()
 end
 
 function interrupt()
