@@ -49,7 +49,7 @@ function setupRequest(itemName, amount)
         for k,v in ipairs(craftables) do
             local craftableData = v.getItemStack()
             if craftableData.label == itemName then
-                local userdata = v.request(amount)
+                local userdata = v.request(amount, false, cpus[1].name)
                 addTable(userData, amount, itemName)
             end
         end
