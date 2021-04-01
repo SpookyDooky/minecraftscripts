@@ -2,9 +2,13 @@ local component = require("component")
 local serialization = require("serialization")
 local me_interface = component.me_interface
 
-local control_loop = true
+local eventQueue = require("event")
+local modem = component.modem
 
+local control_loop = true
 local craftingTrackers = {}
+
+local localAddress = "f199a667-7505-46e5-bac2-179a84cccfc2"
 
 function control_me()
     local progression_count = 0
@@ -86,4 +90,7 @@ function interrupt()
     control_loop = false
 end
 
+function initNetworking()
+
+end
 control_me()
