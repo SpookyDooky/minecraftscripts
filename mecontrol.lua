@@ -43,14 +43,14 @@ function setupRequest(itemName, amount)
     end
     print("crafting request, item=", itemName, " size=", amount)
     local cpus = me_interface.getCpus()
-    print(serialization.serialize(cpus))
     if #cpus >= 1 then -- Availability of cpus confirmed
         local craftables = me_interface.getCraftables()
         for k,v in ipairs(craftables) do
             local craftableData = v.getItemStack()
             if craftableData.label == itemName then
                 local userdata = v.request(amount, false, cpus[1].name)
-                addTable(userData, amount, itemName)
+                print("Request made to cpu:", cpus[1].name)
+                addTable(userdata, amount, itemName)
             end
         end
     end
