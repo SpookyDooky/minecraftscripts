@@ -23,7 +23,7 @@ end
 function keep_items_level()
     local itemsToCheck = {"Redstone", "Logic Processor", "Engineering Processor", 
     "Calculation Processor", "Polymer Clay", "Crushed Diamond"}
-    local lowerBound = {1000, 400, 200, 300, 500, 200}
+    local lowerBound = {1000, 400, 200, 300, 1000, 200}
     local requestAmount = {5000, 200, 300, 300, 10000, 300}
 
     local item_db = me_interface.getItemsInNetwork()
@@ -32,12 +32,13 @@ function keep_items_level()
     for k,v in ipairs(item_db) do
         for i=1,#itemsToCheck do
             if v.label == itemsToCheck[i] then
-                print(v.label, " quantity:", v.size)
+                print(v.label, " quantity: ", v.size)
                 if v.size < lowerBound[i] then
                     setupRequest(v.label, requestAmount[i])
                 end
             end
         end
+        print("---------------------------------------------------------------------------------")
     end
 end
 
