@@ -17,11 +17,10 @@ function control_me()
 end
 
 function keep_items_level()
-    local itemsToCheck = {"Bone Meal", "Lapis Lazuli", 
-    "Redstone", "Logic Processor", "Engineering Processor", 
+    local itemsToCheck = {"Redstone", "Logic Processor", "Engineering Processor", 
     "Calculation Processor", "Polymer Clay", "Crushed Diamond"}
-    local lowerBound = {1000, 1000, 1000, 400, 200, 300, 500, 200}
-    local requestAmount = {15000, 15000, 5000, 200, 300, 300, 10000, 300}
+    local lowerBound = {1000, 400, 200, 300, 500, 200}
+    local requestAmount = {5000, 200, 300, 300, 10000, 300}
 
     local item_db = me_interface.getItemsInNetwork()
     local index = 0
@@ -44,6 +43,7 @@ function setupRequest(itemName, amount)
     end
     print("crafting request, item=", itemName, " size=", amount)
     local cpus = me_interface.getCpus()
+    print(serialization.serialize(cpus))
     if #cpus >= 1 then -- Availability of cpus confirmed
         local craftables = me_interface.getCraftables()
         for k,v in ipairs(craftables) do
