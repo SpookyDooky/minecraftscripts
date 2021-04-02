@@ -6,6 +6,11 @@ local eventQueue = require("event")
 -- Event name: modem_message
 
 local dns_table = {}
+
+function wait_for_event()
+
+end
+
 function handle_request()
     local localAdress,remoteAddress,portNumber,distance,message = eventQueue.pull("modem_message")
     --commandname
@@ -40,4 +45,50 @@ end
 function request_mismatch()
 
 end
-eventQueue.listen("modem_message", dns_request)
+
+function save_table()
+
+end
+
+--File  layout
+--Computer name, computer address, port to contact on
+function load_table()
+    local dns_file = io.open("/home/dns_list.txt", "r")
+    io.input(dns_file)
+
+    local line = io.read()
+
+    while not (line == nil) do
+        line = io.read()
+        print("loading record: ", line)
+        local tabledata = {}
+        local index = 1
+        for word in string.gmatch(line, '([^,]+)') do
+            tabledata[index] = word
+            index = index + 1
+        end
+        add_to_table(tabledata[1], tabledata[2], tabledata[3])
+    end
+    io.close()
+end
+
+function load_backup()
+end
+
+function save_backup()
+end
+
+--Adds a dns table entry to the table
+function add_to_table(name1, address1, port1)
+    tableData = {
+        name = nil,
+        address = nil,
+        port = nil
+    }
+    tableData.name = name1
+    tableData.address = address1
+    tableData.port = port1
+    table.insert(dns_table, tableData)
+end
+
+eventQueue.listen("modem_message", dns_request())
