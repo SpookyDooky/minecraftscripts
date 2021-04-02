@@ -7,6 +7,7 @@ local eventQueue = require("event")
 
 local dns_table = {}
 
+local serial = require("serialization")
 function wait_for_event()
 
 end
@@ -46,7 +47,8 @@ function request_mismatch()
 
 end
 
-function save_table()
+function append_table(name, address, port)
+    local dns_file = io.open("/home/dns_list.txt", "a")
 
 end
 
@@ -70,6 +72,7 @@ function load_table()
         add_to_table(tabledata[1], tabledata[2], tabledata[3])
     end
     io.close()
+    print(serial.serialize(dns_table))
 end
 
 function load_backup()
@@ -91,4 +94,5 @@ function add_to_table(name1, address1, port1)
     table.insert(dns_table, tableData)
 end
 
-eventQueue.listen("modem_message", dns_request())
+load_table()
+--eventQueue.listen("modem_message", dns_request())
