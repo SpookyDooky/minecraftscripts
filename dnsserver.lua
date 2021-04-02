@@ -14,6 +14,8 @@ local signalStrength = 100
 
 local running = true
 
+local localAddressOwn = "d0db398f-0926-4819-bdcd-78666c8d7d9e"
+
 function setup_network()
     modem.open(port)
     modem.setStrength(signalStrength)
@@ -47,8 +49,10 @@ function(event_id, localAddress, remoteAddress, portNumber, distance, message)
             local parameters = isolate_parameters(message)
             add_new_dns(parameters[1], remoteAddress, parameters[2])
             return
-        elseif string.match(word, "update_dns") then
+        elseif "update_dns" == word then
             return
+        elseif "find_dns" == word then
+            modem.send(remoteAddress, portNumber, toString(localAddressOwn))
         end
         count = count + 1
     end
