@@ -17,6 +17,7 @@ local running = true
 local dnsaddress = "d0db398f-0926-4819-bdcd-78666c8d7d9e"
 
 function setup_network()
+    print("starting dns service...")
     modem.open(port)
     modem.setStrength(signalStrength)
 end
@@ -39,13 +40,14 @@ function(event_id, localAddress, remoteAddress, portNumber, distance, message)
         end
 
         if "request_address" == word then
-            request_address() --add parameters
+            request_address(remoteAddress, portnumber, distance, message) --add parameters
             return
         elseif "add_dns" == word then
             local parameters = isolate_parameters(message)
             add_new_dns(parameters[1], parameters[2], parameters[3])
             return
         elseif "add_dns_me" == word then
+            print("ooga booga caveman brain cum")
             local parameters = isolate_parameters(message)
             local response = add_new_dns(parameters[1], remoteAddress, parameters[2])
 
