@@ -150,6 +150,7 @@ function load_table()
         line = io.read()
     end
     io.close(dns_file)
+    print(serial.serialize(dns_table))
 end
 
 function load_backup()
