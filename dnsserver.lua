@@ -27,7 +27,7 @@ function handle_request()
     local count = 0
     for word in string.gmatch(message, '([^,]+)') do
         if count == 1 then
-            request_mismatch(remoteAddress)
+            request_mismatch(remoteAddress, message)
             return
         end
 
@@ -39,6 +39,9 @@ function handle_request()
         count = count + 1
     end
     
+    if count == 0 then
+        request_mismatch(remoteAddress, message)
+    end
 end
 
 function request_address()
@@ -51,9 +54,10 @@ end
 function dns_mismatch()
 end
 
-function request_mismatch(remoteAddress)
+function request_mismatch(remoteAddress, message)
     --Send back an error message
     --6901 for unknown command
+    print("mismatch: ", message)
     modem.send(remoteAddress, 6969, "6901")
 end
 
@@ -104,4 +108,5 @@ function add_to_table(name1, address1, port1)
 end
 
 load_table()
+setup_network()
 eventQueue.listen("modem_message", handle_request())
