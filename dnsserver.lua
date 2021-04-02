@@ -8,19 +8,26 @@ local eventQueue = require("event")
 local dns_table = {}
 
 local serial = require("serialization")
-function wait_for_event()
-
-end
 
 local port = 6969
 local signalStrength = 100
+
+local running = true
 
 function setup_network()
     modem.open(port)
     modem.setStrength(signalStrength)
 end
 
-function handle_request(event_id, localAddress, remoteAddress, portNumber, distance, message)
+function wait_for_event()
+    while running do
+        handle_request(0, eventQueue.pull("modem_message"))
+        os.sleep(0.1)
+    end
+end
+
+handle_request =
+function(event_id, localAddress, remoteAddress, portNumber, distance, message)
     --commandname
     --parameters
     local count = 0
@@ -108,4 +115,5 @@ end
 
 load_table()
 setup_network()
-eventQueue.listen("modem_message", handle_request())
+
+--eventQueue.listen("modem_message", handle_request())
