@@ -29,47 +29,37 @@ function wait_for_event()
 end
 
 handle_request =
-function(event_id, localAddress, remoteAddress, portNumber, distance, message)
+function(event_id, localAddress, remoteAddress, portNumber, distance, message, message1, message2, message3, message4)
     --commandname
     --parameters
     local count = 0
-    for word in string.gmatch(message, '([^,]+)') do
-        if count == 1 then
-            request_mismatch(remoteAddress, message)
+    if "request_address" == message then --command, computer_name
+            request_address(remoteAddress, portNumber, distance, message1)
+            return
+    elseif "add_dns" == message then --command, computer_name, computer_address, address_port
+        local response = add_new_dns(message1, message2, message3)
+        if not response then
+            modem.send(remoteAddress, portNumber, "69.3:bad request")
             return
         end
-
-        if "request_address" == word then
-            request_address(remoteAddress, portnumber, distance, message) --add parameters
-            return
-        elseif "add_dns" == word then
-            local parameters = isolate_parameters(message)
-            add_new_dns(parameters[1], parameters[2], parameters[3])
-            return
-        elseif "add_dns_me" == word then
-            local parameters = isolate_parameters(message)
-            local response = add_new_dns(parameters[1], remoteAddress, parameters[2])
-
-            print(response)
-            if not response then
-                modem.send(remoteAddress, portNumber, "69.3:bad request")
-                return
-            end
-            
-            modem.send(remoteAddress, portNumber, "response ok")
-            return
-        elseif "update_dns" == word then
-            return
-        elseif "find_dns" == word then
-            modem.send(remoteAddress, portNumber, localAddress)
+        modem.send(remoteAddress, portNumber, "response ok")
+        return
+    elseif "add_dns_me" == message then --command, computer_name, address_port
+        local response = add_new_dns(message1, remoteAddress, message2)
+        if not response then
+            modem.send(remoteAddress, portNumber, "69.3:bad request")
             return
         end
-        count = count + 1
+        modem.send(remoteAddress, portNumber, "response ok")
+        return
+    elseif "update_dns" == message then 
+        return
+    elseif "find_dns" == message then --command
+        modem.send(remoteAddress, portNumber, localAddress)
+        return
     end
     
-    if count == 0 or count == 1 then
-        request_mismatch(remoteAddress, message)
-    end
+    request_mismatch(remoteAddress, message)
 end
 
 function request_address(remoteAddress, portNumber, distance, computerName)
