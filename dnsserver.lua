@@ -47,6 +47,8 @@ function(event_id, localAddress, remoteAddress, portNumber, distance, message)
             local parameters = isolate_parameters(message)
             add_new_dns(parameters[1], remoteAddress, parameters[2])
             return
+        elseif string.match(word, "update_dns") then
+            return
         end
         count = count + 1
     end
@@ -63,11 +65,13 @@ end
 function isolate_parameters(raw_message)
     local count = 0
     local parameters = {}
-    for word in string.gmatch(raw_message, '([^,]+') do
-        if not count == 0 then
-            parameters[count - 1] = word
+    for word in string.gmatch(raw_message, '([^,]+)') do
+        if count > 0 then
+            table.insert(parameters, word)
         end
+        count = count + 1
     end
+    print(serial.serialize(parameters))
     return parameters
 end
 
