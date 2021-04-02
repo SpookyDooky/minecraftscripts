@@ -49,8 +49,10 @@ function(event_id, localAddress, remoteAddress, portNumber, distance, message)
         elseif "add_dns_me" == word then
             print("ooga booga caveman brain cum")
             local parameters = isolate_parameters(message)
+            print("descriptive debug message1!!1")
             local response = add_new_dns(parameters[1], remoteAddress, parameters[2])
 
+            print(response)
             if not response then
                 modem.send(remoteAddress, portNumber, "69.3:bad request")
                 return
@@ -99,7 +101,7 @@ function isolate_parameters(raw_message)
     return parameters
 end
 
-function add_new_dns(name, address, port)
+function add_new_dns(name, address, port) --seems to be working correctly
     if check_existence(address) then
         print("dns entry already exists")
         return
@@ -113,6 +115,7 @@ function add_new_dns(name, address, port)
     add_to_table(name,address, port)
     append_file(name, address, port)
     --save
+    print("added new entry to table")
     return true
 end
 
