@@ -39,7 +39,7 @@ function(event_id, localAddress, remoteAddress, portNumber, distance, message)
         end
 
         if "request_address" == word then
-            request_addres()
+            request_address() --add parameters
             return
         elseif "add_dns" == word then
             local parameters = isolate_parameters(message)
@@ -54,6 +54,7 @@ function(event_id, localAddress, remoteAddress, portNumber, distance, message)
                 return
             end
             
+            print("sending response")
             modem.send(remoteAddress, portNumber, "response ok")
             return
         elseif "update_dns" == word then
