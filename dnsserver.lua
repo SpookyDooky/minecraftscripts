@@ -58,8 +58,17 @@ function(event_id, localAddress, remoteAddress, portNumber, distance, message)
     end
 end
 
-function request_address()
+function request_address(remoteAddress, portNumber, distance, computerName)
+    local result = get_dns(computerName)
+    if result == nil then
+        --69.2
+        modem.send(remoteAddress, portNumber, "unknown machine name:69.2")
+        return
+    end
 
+    local responseMessage = v.address .. "," .. v.port
+    modem.send(remoteAddress, portNumber, responseMessage)
+    print("response ok")
 end
 
 function isolate_parameters(raw_message)
@@ -77,7 +86,6 @@ end
 
 function add_new_dns(name, address, port)
     if check_existence(address) then
-        print("already exists")
         return
     end
     --check if it already exists
@@ -96,7 +104,13 @@ function check_existence(address)
     return false
 end
 
-function dns_mismatch()
+function get_dns(computerName)
+    for k,v in ipairs(dns_table) do
+        if v.name == computerName then
+            return v
+        end
+    end
+    return nil
 end
 
 function request_mismatch(remoteAddress, message)
