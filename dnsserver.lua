@@ -12,6 +12,14 @@ function wait_for_event()
 
 end
 
+local port = 6969
+local signalStrength = 100
+
+function setup_network()
+    modem.open(port)
+    modem.setStrength(signalStrength)
+end
+
 function handle_request()
     local localAdress,remoteAddress,portNumber,distance,message = eventQueue.pull("modem_message")
     --commandname
@@ -19,7 +27,7 @@ function handle_request()
     local count = 0
     for word in string.gmatch(message, '([^,]+)') do
         if count == 1 then
-            request_mismatch()
+            request_mismatch(remoteAddress)
             return
         end
 
@@ -43,8 +51,10 @@ end
 function dns_mismatch()
 end
 
-function request_mismatch()
-
+function request_mismatch(remoteAddress)
+    --Send back an error message
+    --6901 for unknown command
+    modem.send(remoteAddress, 6969, "6901")
 end
 
 function append_table(name, address, port)
@@ -61,7 +71,6 @@ function load_table()
     local line = io.read()
 
     while not (line == nil) do
-        line = io.read()
         print("loading record: ", line)
         local tabledata = {}
         local index = 1
@@ -70,9 +79,9 @@ function load_table()
             index = index + 1
         end
         add_to_table(tabledata[1], tabledata[2], tabledata[3])
+        line = io.read()
     end
-    io.close()
-    print(serial.serialize(dns_table))
+    io.close(dns_file)
 end
 
 function load_backup()
@@ -95,4 +104,4 @@ function add_to_table(name1, address1, port1)
 end
 
 load_table()
---eventQueue.listen("modem_message", dns_request())
+eventQueue.listen("modem_message", handle_request())
