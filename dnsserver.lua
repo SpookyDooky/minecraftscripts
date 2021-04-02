@@ -22,7 +22,6 @@ end
 function wait_for_event()
     while running do
         handle_request(0, eventQueue.pull("modem_message"))
-        os.sleep(0.1)
     end
 end
 
@@ -115,5 +114,5 @@ end
 
 load_table()
 setup_network()
-
+wait_for_event()
 --eventQueue.listen("modem_message", handle_request())
