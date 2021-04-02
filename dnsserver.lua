@@ -51,6 +51,10 @@ function(event_id, localAddress, remoteAddress, portNumber, distance, message)
 
             if not response then
                 modem.send(remoteAddress, portNumber, "69.3:bad request")
+                return
+            end
+            
+            modem.send(remoteAddress, portNumber, "response ok")
             return
         elseif "update_dns" == word then
             return
