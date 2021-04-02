@@ -14,7 +14,7 @@ local signalStrength = 100
 
 local running = true
 
-local localAddressOwn = "d0db398f-0926-4819-bdcd-78666c8d7d9e"
+local dnsaddress = "d0db398f-0926-4819-bdcd-78666c8d7d9e"
 
 function setup_network()
     modem.open(port)
@@ -52,7 +52,8 @@ function(event_id, localAddress, remoteAddress, portNumber, distance, message)
         elseif "update_dns" == word then
             return
         elseif "find_dns" == word then
-            modem.send(remoteAddress, portNumber, toString(localAddressOwn))
+            modem.send(remoteAddress, portNumber, localAddress)
+            return
         end
         count = count + 1
     end
@@ -90,6 +91,7 @@ end
 
 function add_new_dns(name, address, port)
     if check_existence(address) then
+        print("dns entry already exists")
         return
     end
     --check if it already exists
