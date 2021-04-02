@@ -30,6 +30,7 @@ end
 
 handle_request =
 function(event_id, localAddress, remoteAddress, portNumber, distance, message, message1, message2, message3, message4)
+    print("received dns request")
     --commandname
     --parameters
     local count = 0
@@ -70,22 +71,8 @@ function request_address(remoteAddress, portNumber, distance, computerName)
         return
     end
 
-    local responseMessage = v.address .. "," .. v.port
-    modem.send(remoteAddress, portNumber, responseMessage)
+    modem.send(remoteAddress, portNumber, v.address, v.port)
     print("response ok")
-end
-
-function isolate_parameters(raw_message)
-    local count = 0
-    local parameters = {}
-    for word in string.gmatch(raw_message, '([^,]+)') do
-        if count > 0 then
-            table.insert(parameters, word)
-        end
-        count = count + 1
-    end
-    print(serial.serialize(parameters))
-    return parameters
 end
 
 function add_new_dns(name, address, port) --seems to be working correctly
