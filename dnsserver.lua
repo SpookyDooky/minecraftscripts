@@ -20,8 +20,7 @@ function setup_network()
     modem.setStrength(signalStrength)
 end
 
-function handle_request()
-    local localAdress,remoteAddress,portNumber,distance,message = eventQueue.pull("modem_message")
+function handle_request(event_id, localAddress, remoteAddress, portNumber, distance, message)
     --commandname
     --parameters
     local count = 0
