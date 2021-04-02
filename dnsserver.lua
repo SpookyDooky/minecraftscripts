@@ -36,14 +36,14 @@ function(event_id, localAddress, remoteAddress, portNumber, distance, message)
             return
         end
 
-        if string.match(word, "request_address") then
+        if "request_address" == word then
             request_addres()
             return
-        elseif string.match(word, "add_dns") then
+        elseif "add_dns" == word then
             local parameters = isolate_parameters(message)
             add_new_dns(parameters[1], parameters[2], parameters[3])
             return
-        elseif string.match(word, "add_dns_me") then
+        elseif "add_dns_me" == word then
             local parameters = isolate_parameters(message)
             add_new_dns(parameters[1], remoteAddress, parameters[2])
             return
@@ -76,6 +76,10 @@ function isolate_parameters(raw_message)
 end
 
 function add_new_dns(name, address, port)
+    if check_existence(address) then
+        print("already exists")
+        return
+    end
     --check if it already exists
     print("new dns record: name=",name,"address=",address,"port=",port)
     add_to_table(name,address, port)
@@ -83,14 +87,23 @@ function add_new_dns(name, address, port)
     --save
 end
 
+function check_existence(address)
+    for k,v in ipairs(dns_table) do
+        if address == v.address then
+            return true
+        end
+    end
+    return false
+end
+
 function dns_mismatch()
 end
 
 function request_mismatch(remoteAddress, message)
     --Send back an error message
-    --6901 for unknown command
+    --69.1 for unknown command
     print("invalid request: ", message)
-    modem.send(remoteAddress, 6969, "6901")
+    modem.send(remoteAddress, 6969, "69.1")
 end
 
 function append_file(name, address, port)
