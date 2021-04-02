@@ -44,7 +44,9 @@ function(event_id, localAddress, remoteAddress, portNumber, distance, message)
             add_new_dns(parameters[1], parameters[2], parameters[3])
             return
         elseif string.match(word, "add_dns_me") then
-            
+            local parameters = isolate_parameters(message)
+            add_new_dns(parameters[1], remoteAddress, parameters[2])
+            return
         end
         count = count + 1
     end
