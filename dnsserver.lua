@@ -40,8 +40,11 @@ function(event_id, localAddress, remoteAddress, portNumber, distance, message)
             request_addres()
             return
         elseif string.match(word, "add_dns") then
-            add_new_dns()
+            local parameters = isolate_parameters(message)
+            add_new_dns(parameters[1], parameters[2], parameters[3])
             return
+        elseif string.match(word, "add_dns_me") then
+            
         end
         count = count + 1
     end
@@ -53,6 +56,17 @@ end
 
 function request_address()
 
+end
+
+function isolate_parameters(raw_message)
+    local count = 0
+    local parameters = {}
+    for word in string.gmatch(raw_message, '([^,]+') do
+        if not count == 0 then
+            parameters[count - 1] = word
+        end
+    end
+    return parameters
 end
 
 function add_new_dns(name, address, port)
@@ -69,14 +83,18 @@ end
 function request_mismatch(remoteAddress, message)
     --Send back an error message
     --6901 for unknown command
-    print("mismatch: ", message)
+    print("invalid request: ", message)
     modem.send(remoteAddress, 6969, "6901")
 end
 
 function append_file(name, address, port)
     local dns_file = io.open("/home/dns_list.txt", "a")
     io.output(dns_file)
-    local entry = name ... "," ... address ... "," ... port
+    local entry = name 
+    entry = entry .. "," 
+    entry = entry .. address 
+    entry = entry .. "," 
+    entry = entry .. port
     io.write(entry)
     io.close(dns_file)
 end
