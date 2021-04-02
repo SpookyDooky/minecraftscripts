@@ -47,7 +47,10 @@ function(event_id, localAddress, remoteAddress, portNumber, distance, message)
             return
         elseif "add_dns_me" == word then
             local parameters = isolate_parameters(message)
-            add_new_dns(parameters[1], remoteAddress, parameters[2])
+            local response = add_new_dns(parameters[1], remoteAddress, parameters[2])
+
+            if not response then
+                modem.send(remoteAddress, portNumber, "69.3:bad request")
             return
         elseif "update_dns" == word then
             return
@@ -67,7 +70,7 @@ function request_address(remoteAddress, portNumber, distance, computerName)
     local result = get_dns(computerName)
     if result == nil then
         --69.2
-        modem.send(remoteAddress, portNumber, "unknown machine name:69.2")
+        modem.send(remoteAddress, portNumber, "69.2:unknown machine name")
         return
     end
 
@@ -94,11 +97,16 @@ function add_new_dns(name, address, port)
         print("dns entry already exists")
         return
     end
+    if name == nil or address == nil or port == nil then
+        print("bad request, missing info 69.3")
+        return false
+    end
     --check if it already exists
     print("new dns record: name=",name,"address=",address,"port=",port)
     add_to_table(name,address, port)
     append_file(name, address, port)
     --save
+    return true
 end
 
 function check_existence(address)
@@ -123,7 +131,7 @@ function request_mismatch(remoteAddress, message)
     --Send back an error message
     --69.1 for unknown command
     print("invalid request: ", message)
-    modem.send(remoteAddress, 6969, "69.1")
+    modem.send(remoteAddress, 6969, "69.1:invalid name")
 end
 
 function append_file(name, address, port)
