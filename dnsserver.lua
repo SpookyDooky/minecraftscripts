@@ -21,7 +21,7 @@ end
 
 function wait_for_event()
     while running do
-        handle_request(0, eventQueue.pull("modem_message"))
+        handle_request(eventQueue.pull("modem_message"))
     end
 end
 
@@ -38,13 +38,15 @@ function(event_id, localAddress, remoteAddress, portNumber, distance, message)
 
         if string.match(word, "request address") then
             request_addres()
+            return
         elseif string.match(word, "add dns") then
             add_new_dns()
+            return
         end
         count = count + 1
     end
     
-    if count == 0 then
+    if count == 0 or count == 1 then
         request_mismatch(remoteAddress, message)
     end
 end
