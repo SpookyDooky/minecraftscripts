@@ -70,7 +70,9 @@ function request_address(remoteAddress, portNumber, distance, computerName)
         modem.send(remoteAddress, portNumber, "69.2:unknown machine name")
         return
     end
-
+    print("whattt")
+    print(v.address)
+    print(v.port)
     modem.send(remoteAddress, portNumber, v.address, v.port)
     print("response ok")
 end
@@ -107,7 +109,7 @@ function get_dns(computerName)
     for k,v in ipairs(dns_table) do
         print(serial.serialize(v))
         if v.name == computerName then
-            print(v.name)
+            print("matched")
             return v
         end
     end
