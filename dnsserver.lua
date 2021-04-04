@@ -64,16 +64,14 @@ function(event_id, localAddress, remoteAddress, portNumber, distance, message, m
 end
 
 function request_address(remoteAddress, portNumber, distance, computerName)
+    print("dns lookup:",computerName)
     local result = get_dns(computerName)
     if result == nil then
         --69.2
         modem.send(remoteAddress, portNumber, "69.2:unknown machine name")
         return
     end
-    print("whattt")
-    print(v.address)
-    print(v.port)
-    modem.send(remoteAddress, portNumber, v.address, v.port)
+    modem.send(remoteAddress, portNumber, result.address, tonumber(result.port))
     print("response ok")
 end
 
@@ -105,7 +103,7 @@ function check_existence(address)
 end
 
 function get_dns(computerName)
-    print("Looking up: ", computerName)
+    print("searching table for: ", computerName)
     for k,v in ipairs(dns_table) do
         print(serial.serialize(v))
         if v.name == computerName then
