@@ -103,8 +103,11 @@ function check_existence(address)
 end
 
 function get_dns(computerName)
+    print("Looking up: ", computerName)
     for k,v in ipairs(dns_table) do
+        print(serial.serialize(v))
         if v.name == computerName then
+            print(v.name)
             return v
         end
     end
