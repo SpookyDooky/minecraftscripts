@@ -23,8 +23,8 @@ end
 function keep_items_level()
     local itemsToCheck = {"Redstone", "Logic Processor", "Engineering Processor", 
     "Calculation Processor", "Polymer Clay", "Crushed Diamond"}
-    local lowerBound = {1000, 400, 200, 300, 1000, 200}
-    local requestAmount = {5000, 200, 300, 300, 10000, 300}
+    local lowerBound = {1000, 500, 500, 500, 1000, 200}
+    local requestAmount = {5000, 750, 750, 750, 10000, 300}
 
     local item_db = me_interface.getItemsInNetwork()
     local index = 0

@@ -105,9 +105,8 @@ end
 function get_dns(computerName)
     print("searching table for: ", computerName)
     for k,v in ipairs(dns_table) do
-        print(serial.serialize(v))
         if v.name == computerName then
-            print("matched")
+            print("found ", computerName, "in table")
             return v
         end
     end
