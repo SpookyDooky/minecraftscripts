@@ -51,15 +51,18 @@ function setupRequest(itemName, amount)
     local cpus = me_interface.getCpus()
     if #cpus >= 1 then -- Availability of cpus confirmed
         local craftables = me_interface.getCraftables()
+        local cpuIndex = 1
+        while cpus[cpuIndex] and cpuIndex < #cpus do
+            cpuIndex = cpuIndex + 1
+        end
         for k,v in ipairs(craftables) do
             local craftableData = v.getItemStack()
             if craftableData.label == itemName then
-                local userdata = v.request(amount, false, cpus[1].name)
-                print("Request made to cpu:", cpus[1].name)
+                local userdata = v.request(amount, false, cpus[cpuIndex].name)
+                print("Request made to cpu:", cpus[cpuIndex].name)
                 addTable(userdata, amount, itemName)
             end
         end
-        cpus = me_interface.getCpus()
     end
 end
 
