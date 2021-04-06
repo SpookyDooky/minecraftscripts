@@ -22,7 +22,7 @@ end
 
 function keep_items_level()
     local itemsToCheck = {"Redstone", "Logic Processor", "Engineering Processor", 
-    "Calculation Processor", "Polymer Clay", "Crushed Diamond", "Lapis Lazule",
+    "Calculation Processor", "Polymer Clay", "Crushed Diamond", "Lapis Lazuli",
     "Lithium Dust"}
     local lowerBound = {1000, 500, 500, 500, 1000, 400, 1000, 300}
     local requestAmount = {5000, 750, 750, 750, 50000, 800, 5000, 500}
@@ -59,6 +59,7 @@ function setupRequest(itemName, amount)
                 addTable(userdata, amount, itemName)
             end
         end
+        cpus = me_interface.getCpus()
     end
 end
 
