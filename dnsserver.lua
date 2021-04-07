@@ -20,6 +20,7 @@ function setup_network()
     print("starting dns service...")
     modem.open(port)
     modem.setStrength(signalStrength)
+    modem.broadcast(port, "dns server: ONLINE")
 end
 
 function wait_for_event()
@@ -152,6 +153,7 @@ function load_table()
         line = io.read()
     end
     io.close(dns_file)
+    print("Loaded dns table:")
     print(serial.serialize(dns_table))
 end
 
